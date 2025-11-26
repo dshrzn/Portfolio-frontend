@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Анкета</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="content">
+        <h1 id="glav">
+            Анкета Web-разработчика
+        </h1>
+        <form action="#" class="frm">
+            <table class="table">
+                <tr class="line1">
+                    <td class="frst">
+                        <label for="imya" class="lftbl">Имя:</label>
+                        <label for="famil" class="lftbl">Фамилия:</label>
+                    </td>
+                    <td class="pgl">
+                        <input type="text" name="imya" class="int"  required="required">
+                        <input type="text" name="famil" class="int"  required="required">
+                    </td>
+                </tr>
+                <tr class="line2">
+                    <td class="scnd">
+                        <label for="email" class="lftbl">E-mail:</label>
+                        <label for="tel" class="lftbl">Телефон:</label>
+                    </td>
+                    <td class="scnd2">
+                        <input type="text" name="email" class="int"  required="required">
+                        <input type="text" name="tel" class="int"  required="required">
+                    </td>
+                </tr>
+                <tr class="line3">
+                    <td class="thrd">
+                        <label for="" class="lftbl">Ваш пол:</label>
+                        <label for="" class="lftbl">Ваш возраст:</label>
+                    </td>
+                    <td class="thrd2">
+                        <div class="gndr">
+                            <div class="m">
+                                <input type="radio" id="mn" name="gendrm">
+                                <label for="gendrm" class="rtbl">М</label>
+                            </div>
+                            <div class="zh">
+                                <input type="radio" id="mn" name="gendrm" checked>
+                                <label for="gendrm" class="rtbl">Ж</label>
+                            </div>
+                        </div>
+                        <div class="age">
+                            <label for="age">18</label>
+                            <input type="range" id="ageroll" name="age" min="8" max="80" />
+                            <label for="age">80</label>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="line4">
+                    <td class="frth">
+                        <label for="prof" class="lftbl">Ваша специализация:</label>
+                        <label for="" class="lftbl">Ваши навыки:</label>
+                    </td>
+                    <td class="frth2">
+                        <select name="prof" id="choose">
+                            <option value="">Web-Дизайнер</option>
+                            <option value="">Web-программист</option>
+                        </select>
+                        <div class="checkbox">
+                            <input type="checkbox" id="checkbox1" checked>
+                            <label for="checkbox1">Знание HTML</label>
+                        </div>
+                        <div class="checkbox">
+                            <input type="checkbox" id="checkbox2">
+                            <label for="checkbox2">Знание Java</label>
+                        </div>
+                        <div class="checkbox">
+                            <input type="checkbox" id="checkbox3">
+                            <label for="checkbox3">Знание PHP</label>
+                        </div>
+                        <div class="checkbox">
+                            <input type="checkbox" id="checkbox4" checked>
+                            <label for="checkbox4">Знание Adobe Photoshop</label>
+                        </div>
+                        <div class="checkbox">
+                            <input type="checkbox" id="checkbox5">
+                            <label for="checkbox5">Знание Flash</label>
+</div>
+</td>
+</tr>
+<tr class="line4">
+<td class="fifth">
+<label for="" class="sveden">Дополнительные сведения о себе:</label>
+</td>
+<td class="fifth2">
+<textarea name="" id="txtar" placeholder="Расскажите о себе"></textarea>
+</td>
+</tr>
+</table>
+<fieldset class="fldst">
+<legend class="lgnd">Результаты надо:</legend>
+<button type="submit" class="btn">Отправить</button>
+<button type="reset" class="btn">Удалить</button>
+</fieldset>
+</form>
+</div>
+</body>
+
+</html>
