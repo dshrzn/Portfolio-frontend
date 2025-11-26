@@ -9,16 +9,16 @@
         * {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
+                    box-sizing: border-box;
         }
         
         :root {
-            --primary: #667eea;
-            --secondary: #764ba2;
-            --accent: #f093fb;
+            --primary: #4a6fa5;
+            --secondary: #6b93c5;
+            --accent: #89c2d9;
             --light: rgba(255, 255, 255, 0.9);
             --dark: #333;
-            --card-bg: rgba(255, 255, 255, 0.1);
+            --card-bg: rgba(255, 255, 255, 0.15);
             --transition: all 0.3s ease;
         }
         
@@ -49,11 +49,12 @@
             object-fit: cover;
             border: 4px solid var(--light);
             margin: 0 auto 20px;
-            background-color: rgba(255, 255, 255, 0.2);
+            background: linear-gradient(135deg, var(--accent) 0%, var(--secondary) 100%);
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 50px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
         
         h1 {
@@ -102,6 +103,7 @@
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.2);
             transition: var(--transition);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
         
         .skill-category:hover {
@@ -159,6 +161,11 @@
             display: block;
             position: relative;
             overflow: hidden;
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
         
         .project-card::before {
@@ -175,8 +182,8 @@
         
         .project-card:hover {
             transform: translateY(-10px);
-            background: rgba(255, 255, 255, 0.15);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
         }
         
         .project-card:hover::before {
@@ -198,10 +205,6 @@
         .project-description {
             opacity: 0.8;
             font-size: 0.9em;
-        }
-        
-        .coming-soon {
-            opacity: 0.6;
         }
         
         footer {
@@ -327,10 +330,11 @@
                 <div class="project-title">Project 6</div>
             </a>
             
-            <a href="projects/project7" class="project-card coming-soon">
+            <a href="projects/project7" class="project-card">
                 <div class="project-title">Project 7</div>
             </a>
-             <a href="projects/project7" class="project-card coming-soon">
+            
+            <a href="projects/project8" class="project-card">
                 <div class="project-title">Project 8</div>
             </a>
         </div>
