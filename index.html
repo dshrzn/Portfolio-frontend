@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Portfolio</title>
+    <title>Портфолио Дарьи Рязанцевой</title>
     <style>
         * {
             margin: 0;
@@ -39,6 +39,56 @@
         .subtitle {
             font-size: 1.3em;
             opacity: 0.9;
+            margin-bottom: 20px;
+        }
+        
+        .about {
+            max-width: 800px;
+            margin: 0 auto 40px;
+            text-align: center;
+        }
+        
+        .skills-section {
+            margin: 40px 0;
+        }
+        
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+        
+        .skill-category {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 25px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .skill-category h3 {
+            margin-bottom: 15px;
+            font-size: 1.4em;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            padding-bottom: 10px;
+        }
+        
+        .skill-list {
+            list-style-type: none;
+        }
+        
+        .skill-list li {
+            margin-bottom: 8px;
+            padding-left: 15px;
+            position: relative;
+        }
+        
+        .skill-list li:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: rgba(255, 255, 255, 0.7);
         }
         
         .projects-grid {
@@ -67,11 +117,6 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
         
-        .project-icon {
-            font-size: 3em;
-            margin-bottom: 15px;
-        }
-        
         .project-title {
             font-size: 1.4em;
             margin-bottom: 10px;
@@ -86,54 +131,110 @@
         .coming-soon {
             opacity: 0.6;
         }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2em;
+            }
+            
+            .subtitle {
+                font-size: 1.1em;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>🎨 Мое Портфолио</h1>
-            <p class="subtitle">Добро пожаловать в мою коллекцию проектов</p>
+            <h1>Портфолио Дарьи Рязанцевой</h1>
+            <p class="subtitle">Студентка по специальности "Компьютерный дизайн"</p>
+            
+            <div class="about">
+                <p>Приветствую! Я Дарья Рязанцева, студентка университета, обучаюсь по специальности "Компьютерный дизайн". В моем портфолио представлены проекты, демонстрирующие мои навыки в веб-разработке и дизайне интерфейсов.</p>
+            </div>
         </header>
+        
+        <div class="skills-section">
+            <h2 style="text-align: center; margin-bottom: 30px;">Мои навыки</h2>
+            
+            <div class="skills-grid">
+                <div class="skill-category">
+                    <h3>Frontend Foundations</h3>
+                    <ul class="skill-list">
+                        <li>HTML5 (семантическая верстка, доступность)</li>
+                        <li>CSS3 (Flexbox, Grid, анимации, трансформации)</li>
+                        <li>SCSS/SASS (переменные, миксины, вложенность)</li>
+                        <li>Адаптивный дизайн (mobile-first, медиа-запросы)</li>
+                        <li>Кроссбраузерная верстка</li>
+                    </ul>
+                </div>
+                
+                <div class="skill-category">
+                    <h3>JavaScript</h3>
+                    <ul class="skill-list">
+                        <li>ES6+ (модули, деструктуризация, стрелочные функции)</li>
+                        <li>DOM manipulation (события, динамическое обновление контента)</li>
+                        <li>Асинхронное программирование (Promise, async/await)</li>
+                        <li>Работа с формами и валидация</li>
+                        <li>Реализация интерактивных элементов</li>
+                    </ul>
+                </div>
+                
+                <div class="skill-category">
+                    <h3>Фреймворки & Библиотеки</h3>
+                    <ul class="skill-list">
+                        <li>Bootstrap 5 (компоненты, карусели, модальные окна)</li>
+                        <li>React (основы компонентов, хуки, состояние)</li>
+                        <li>jQuery (для legacy проектов)</li>
+                    </ul>
+                </div>
+                
+                <div class="skill-category">
+                    <h3>UI/UX & Методологии</h3>
+                    <ul class="skill-list">
+                        <li>БЭМ (именование классов, организация стилей)</li>
+                        <li>Component-based architecture</li>
+                        <li>User Experience принципы</li>
+                        <li>Прототипирование интерфейсов</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <h2 style="text-align: center; margin-bottom: 30px;">Мои проекты</h2>
         
         <div class="projects-grid">
             <a href="projects/project1" class="project-card">
-                <div class="project-icon">🚀</div>
                 <div class="project-title">Project 1</div>
                 <div class="project-description">Стартовый проект</div>
             </a>
             
             <a href="projects/project2" class="project-card">
-                <div class="project-icon">💻</div>
                 <div class="project-title">Project 2</div>
                 <div class="project-description coming-soon">Скоро будет...</div>
             </a>
             
             <a href="projects/project3" class="project-card">
-                <div class="project-icon">🎨</div>
                 <div class="project-title">Project 3</div>
                 <div class="project-description coming-soon">Скоро будет...</div>
             </a>
             
             <a href="projects/project4" class="project-card">
-                <div class="project-icon">📱</div>
                 <div class="project-title">Project 4</div>
                 <div class="project-description coming-soon">Скоро будет...</div>
             </a>
             
             <a href="projects/project5" class="project-card">
-                <div class="project-icon">🔧</div>
                 <div class="project-title">Project 5</div>
                 <div class="project-description coming-soon">Скоро будет...</div>
             </a>
             
             <a href="projects/project6" class="project-card">
-                <div class="project-icon">📊</div>
                 <div class="project-title">Project 6</div>
                 <div class="project-description coming-soon">Скоро будет...</div>
             </a>
             
             <a href="projects/project7" class="project-card">
-                <div class="project-icon">🎯</div>
                 <div class="project-title">Project 7</div>
                 <div class="project-description coming-soon">Скоро будет...</div>
             </a>
