@@ -1,0 +1,72 @@
+body {
+    margin: 0px;
+    font-family: 'Tahoma';
+    font-size: 16px;
+    padding: 10px;
+}
+
+.date {
+    padding: 3px;
+    background-color: #B3F9D1;
+    border: solid #0BDF02;
+    border-radius: 5px;
+    margin-left: 50%;
+    margin-top: 20px;
+    position: fixed;
+    transform: translateX(-90px);
+    z-index: 10;
+}
+
+.message.in{
+    padding: 3px;
+    background-color: #F9FDCE;
+    border: solid #FCF594;
+    margin: 10px;
+    border-radius: 10px;
+    margin-left: 20px;
+    margin-right: 100px;
+}
+.message.out{
+    padding: 3px;
+    background-color: #BAF9F2;
+    border: solid #6BEBFB;
+    margin: 10px;
+    border-radius: 10px;
+    margin-left: 100px;
+    margin-right: 20px;
+}
+
+span {
+    font-size: 14px;
+    color: #666;
+}
+
+.message {
+    font-size: 26px;
+    position: relative;
+}
+
+.in::before, .in::after {
+    content: '';
+    position: absolute;
+    left: -20px; top: 10px;
+    border: 10px solid transparent;
+    border-right: 10px solid #FCF594;
+}
+.in::after {
+    border-right: 10px solid #F9FDCE;
+    left: -19px;
+}
+
+.message.out::before, .message.out::after {
+    content: '';
+    position: absolute;
+    right: -20px;
+    top: 10px;
+    border: 10px solid transparent;
+    border-left: 10px solid #6BEBFB;
+} 
+
+
+    
+    
