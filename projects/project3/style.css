@@ -28,12 +28,7 @@ body{
     --white-color:#ffffff ;
     --backgroung-color: #e5e5e5;
 }
-.h1{
-    color: var( --dark-color);
-}
-.h4{
-    color: var( --dark-color);
-}
+
 .text-h2{
     font-family: 'Oswald',  sans-serif; 
     font-weight: 500;
@@ -113,7 +108,7 @@ body{
     text-align: center;
     
     margin: 0 auto 1px;
-    color: var(--white-color);
+    color: var(--dark-color);
 
 }
 .h4 {
@@ -124,7 +119,7 @@ body{
     text-align: center;
     text-transform: uppercase;
     margin: 0 auto;
-    color: var(--white-color);
+    color: var(--dark-color);
 }
 .about{
     padding-top: 250px;
@@ -514,4 +509,5 @@ body{
     justify-content: space-between;
 
 }
+
 
