@@ -28,6 +28,12 @@ body{
     --white-color:#ffffff ;
     --backgroung-color: #e5e5e5;
 }
+.h1{
+    color:black;
+}
+.h4{
+    color:black;
+}
 .text-h2{
     font-family: 'Oswald',  sans-serif; 
     font-weight: 500;
@@ -506,4 +512,5 @@ body{
 .footer__flex {
     display: flex;
     justify-content: space-between;
+
 }
