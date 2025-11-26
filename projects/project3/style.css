@@ -29,10 +29,10 @@ body{
     --backgroung-color: #e5e5e5;
 }
 .h1{
-    color:black;
+    color: var( --dark-color);
 }
 .h4{
-    color:black;
+    color: var( --dark-color);
 }
 .text-h2{
     font-family: 'Oswald',  sans-serif; 
@@ -514,3 +514,4 @@ body{
     justify-content: space-between;
 
 }
+
