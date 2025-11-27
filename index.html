@@ -13,21 +13,22 @@
         }
         
         :root {
-            --primary: #4a6fa5;
-            --secondary: #6b93c5;
-            --accent: #89c2d9;
-            --light: rgba(255, 255, 255, 0.9);
-            --dark: #333;
-            --card-bg: rgba(255, 255, 255, 0.15);
+            --primary: #2c3e50;
+            --secondary: #34495e;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --card-bg: rgba(255, 255, 255, 0.95);
             --transition: all 0.3s ease;
-            --gradient: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            --gradient-accent: linear-gradient(135deg, var(--accent) 0%, #4a9de3 100%);
+            --gradient: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            --gradient-accent: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: var(--gradient);
-            color: white;
+            background: var(--light);
+            color: var(--dark);
             min-height: 100vh;
             line-height: 1.6;
             overflow-x: hidden;
@@ -42,8 +43,13 @@
         header {
             text-align: center;
             margin-bottom: 70px;
-            padding: 40px 20px;
+            padding: 60px 20px;
             position: relative;
+            background: var(--gradient);
+            border-radius: 20px;
+            color: white;
+            box-shadow: var(--shadow);
+            overflow: hidden;
         }
         
         header::before {
@@ -53,10 +59,9 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(5px);
-            z-index: -1;
-            border-radius: 20px;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" fill="%23ffffff" opacity="0.05"><polygon points="1000,0 1000,100 0,100"></polygon></svg>');
+            background-size: cover;
+            z-index: 0;
         }
         
         .profile-img {
@@ -64,46 +69,31 @@
             height: 180px;
             border-radius: 50%;
             object-fit: cover;
-            border: 4px solid var(--light);
+            border: 4px solid white;
             margin: 0 auto 25px;
             background: var(--gradient-accent);
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 60px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            box-shadow: var(--shadow);
             position: relative;
             overflow: hidden;
             transition: var(--transition);
-        }
-        
-        .profile-img::after {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.1);
-            transform: translateX(-100%);
-            transition: transform 0.5s ease;
+            z-index: 1;
         }
         
         .profile-img:hover {
             transform: scale(1.05);
-        }
-        
-        .profile-img:hover::after {
-            transform: translateX(100%);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
         }
         
         h1 {
             font-size: 3.2em;
             margin-bottom: 15px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-            background: var(--gradient-accent);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
             font-weight: 700;
+            position: relative;
+            z-index: 1;
         }
         
         .subtitle {
@@ -112,6 +102,8 @@
             max-width: 700px;
             margin: 0 auto 30px;
             font-weight: 300;
+            position: relative;
+            z-index: 1;
         }
         
         .section-title {
@@ -120,6 +112,7 @@
             font-size: 2.5em;
             position: relative;
             padding-bottom: 20px;
+            color: var(--primary);
         }
         
         .section-title::after {
@@ -143,36 +136,24 @@
         
         .skill-category {
             background: var(--card-bg);
-            border-radius: 20px;
+            border-radius: 15px;
             padding: 30px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
             transition: var(--transition);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            box-shadow: var(--shadow);
             position: relative;
             overflow: hidden;
-        }
-        
-        .skill-category::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 5px;
-            background: var(--gradient-accent);
+            border-left: 5px solid var(--accent);
         }
         
         .skill-category:hover {
             transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
-            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
         }
         
         .skill-category h3 {
             margin-bottom: 20px;
             font-size: 1.5em;
-            color: var(--accent);
+            color: var(--primary);
             display: flex;
             align-items: center;
             gap: 12px;
@@ -184,7 +165,7 @@
         
         .skill-list li {
             padding: 12px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
             display: flex;
             align-items: center;
             gap: 12px;
@@ -193,7 +174,7 @@
         
         .skill-list li:hover {
             padding-left: 10px;
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(231, 76, 60, 0.05);
             border-radius: 5px;
         }
         
@@ -215,14 +196,12 @@
         
         .project-card {
             background: var(--card-bg);
-            border-radius: 20px;
+            border-radius: 15px;
             padding: 40px 30px;
             text-align: center;
             transition: var(--transition);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
             text-decoration: none;
-            color: white;
+            color: var(--dark);
             display: block;
             position: relative;
             overflow: hidden;
@@ -231,30 +210,15 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-        }
-        
-        .project-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--gradient-accent);
-            opacity: 0;
-            transition: var(--transition);
-            z-index: -1;
+            box-shadow: var(--shadow);
+            border-top: 4px solid transparent;
         }
         
         .project-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
-            color: white;
-        }
-        
-        .project-card:hover::before {
-            opacity: 0.1;
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+            color: var(--dark);
+            border-top: 4px solid var(--accent);
         }
         
         .project-icon {
@@ -266,7 +230,6 @@
         
         .project-card:hover .project-icon {
             transform: scale(1.2);
-            color: white;
         }
         
         .project-title {
@@ -284,20 +247,11 @@
             text-align: center;
             margin-top: 80px;
             padding: 30px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
             position: relative;
-        }
-        
-        footer::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(5px);
-            z-index: -1;
+            background: var(--primary);
+            color: white;
+            border-radius: 15px;
         }
         
         .social-links {
@@ -338,7 +292,7 @@
         
         .floating-element {
             position: absolute;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(231, 76, 60, 0.1);
             border-radius: 50%;
             animation: float 15s infinite linear;
         }
@@ -500,13 +454,17 @@
         
         <footer>
             <p>© 2025 Дарья Рязанцева. Все права защищены.</p>
+            <div class="social-links">
+                <a href="#"><i class="fab fa-vk"></i></a>
+                <a href="#"><i class="fab fa-telegram"></i></a>
+                <a href="#"><i class="fab fa-github"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+            </div>
         </footer>
     </div>
 
     <script>
-     
         document.addEventListener('DOMContentLoaded', function() {
-    
             const elements = document.querySelectorAll('.skill-category, .project-card, header');
             
             elements.forEach((element, index) => {
