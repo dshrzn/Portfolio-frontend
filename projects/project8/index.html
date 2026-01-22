@@ -1,0 +1,1256 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elite Card Manager | Управление банковскими картами</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1a1b26;
+            --secondary: #24283b;
+            --accent: #7aa2f7;
+            --accent-dark: #5a7cd3;
+            --success: #9ece6a;
+            --warning: #e0af68;
+            --danger: #f7768e;
+            --text: #c0caf5;
+            --text-light: #a9b1d6;
+            --text-lighter: #787c99;
+            --card-gradient: linear-gradient(135deg, #1a1b26 0%, #24283b 100%);
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            --shadow-light: 0 4px 16px rgba(0, 0, 0, 0.2);
+            --border-radius: 16px;
+            --border-radius-sm: 12px;
+            --border-radius-lg: 24px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f0f14 0%, #1a1b26 100%);
+            color: var(--text);
+            min-height: 100vh;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        #root {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(122, 162, 247, 0.3); }
+            50% { box-shadow: 0 0 30px rgba(122, 162, 247, 0.5); }
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+     
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--secondary);
+            border-radius: 5px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 5px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-dark);
+        }
+       
+        @media (max-width: 1200px) {
+            .cards-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .cards-grid {
+                grid-template-columns: 1fr !important;
+            }
+            
+            .header-content h1 {
+                font-size: 2.2rem !important;
+            }
+            
+            .controls {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+            }
+            
+            .filter-section, .view-controls {
+                width: 100% !important;
+                margin-bottom: 1rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr !important;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .card-form .form-row {
+                flex-direction: column !important;
+            }
+            
+            .card-actions {
+                flex-direction: column !important;
+            }
+            
+            .card-details {
+                flex-direction: column !important;
+                gap: 1rem !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+   
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+   
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+        
+        function App() {
+           
+            const initialCards = [
+                {
+                    id: 1,
+                    cardNumber: '5536 9141 2345 6789',
+                    cardHolder: 'ALEXEY VOLKOV',
+                    expiryDate: '09/25',
+                    cvv: '123',
+                    cardType: 'world',
+                    isActive: true,
+                    balance: 285700,
+                    currency: 'RUB',
+                    bank: 'tinkoff',
+                    bankName: 'Тинькофф Банк',
+                    cardName: 'Tinkoff Platinum',
+                    limit: 500000,
+                    spent: 214300,
+                    cardColor: '#FFDD2D'
+                },
+                {
+                    id: 2,
+                    cardNumber: '4111 1111 1111 1111',
+                    cardHolder: 'MARIA IVANOVA',
+                    expiryDate: '12/24',
+                    cvv: '456',
+                    cardType: 'visa',
+                    isActive: true,
+                    balance: 1250000,
+                    currency: 'RUB',
+                    bank: 'sber',
+                    bankName: 'Сбербанк',
+                    cardName: 'Sberbank Premier',
+                    limit: 2000000,
+                    spent: 750000,
+                    cardColor: '#1A9F29'
+                },
+                {
+                    id: 3,
+                    cardNumber: '5213 2414 3567 8890',
+                    cardHolder: 'DMITRY SOKOLOV',
+                    expiryDate: '03/26',
+                    cvv: '789',
+                    cardType: 'mastercard',
+                    isActive: false,
+                    balance: 580000,
+                    currency: 'RUB',
+                    bank: 'alfa',
+                    bankName: 'Альфа-Банк',
+                    cardName: 'Alfa-Bank Infinite',
+                    limit: 1000000,
+                    spent: 420000,
+                    cardColor: '#EF3124'
+                },
+                {
+                    id: 4,
+                    cardNumber: '2200 1234 5678 9012',
+                    cardHolder: 'ANASTASIA PETROVA',
+                    expiryDate: '08/27',
+                    cvv: '321',
+                    cardType: 'mir',
+                    isActive: true,
+                    balance: 89000,
+                    currency: 'RUB',
+                    bank: 'vtb',
+                    bankName: 'ВТБ',
+                    cardName: 'VTB Premium',
+                    limit: 300000,
+                    spent: 211000,
+                    cardColor: '#1946B8'
+                },
+                {
+                    id: 5,
+                    cardNumber: '3714 496353 98431',
+                    cardHolder: 'MAXIM ORLOV',
+                    expiryDate: '11/25',
+                    cvv: '654',
+                    cardType: 'amex',
+                    isActive: true,
+                    balance: 420000,
+                    currency: 'USD',
+                    bank: 'raiffeisen',
+                    bankName: 'Райффайзенбанк',
+                    cardName: 'Raiffeisen Gold',
+                    limit: 1000000,
+                    spent: 580000,
+                    cardColor: '#FF6600'
+                },
+                {
+                    id: 6,
+                    cardNumber: '4567 8901 2345 6789',
+                    cardHolder: 'EKATERINA SMIRNOVA',
+                    expiryDate: '05/26',
+                    cvv: '987',
+                    cardType: 'visa',
+                    isActive: true,
+                    balance: 340000,
+                    currency: 'EUR',
+                    bank: 'gazprom',
+                    bankName: 'Газпромбанк',
+                    cardName: 'Gazprombank Private',
+                    limit: 750000,
+                    spent: 410000,
+                    cardColor: '#0C5EA8'
+                }
+            ];
+            
+            const [cards, setCards] = useState(initialCards);
+            const [showForm, setShowForm] = useState(false);
+            const [filterType, setFilterType] = useState('all');
+            const [filterBank, setFilterBank] = useState('all');
+            const [viewMode, setViewMode] = useState('grid');
+            const [searchQuery, setSearchQuery] = useState('');
+            
+            const [newCard, setNewCard] = useState({
+                cardNumber: '',
+                cardHolder: '',
+                expiryDate: '',
+                cvv: '',
+                cardType: 'visa',
+                bank: 'tinkoff',
+                isActive: true,
+                balance: '',
+                currency: 'RUB',
+                cardName: '',
+                limit: ''
+            });
+            
+           
+            const banks = [
+                { id: 'tinkoff', name: 'Тинькофф', color: '#FFDD2D' },
+                { id: 'sber', name: 'Сбербанк', color: '#1A9F29' },
+                { id: 'alfa', name: 'Альфа-Банк', color: '#EF3124' },
+                { id: 'vtb', name: 'ВТБ', color: '#1946B8' },
+                { id: 'raiffeisen', name: 'Райффайзенбанк', color: '#FF6600' },
+                { id: 'gazprom', name: 'Газпромбанк', color: '#0C5EA8' },
+                { id: 'mts', name: 'МТС Банк', color: '#E30613' },
+                { id: 'otkritie', name: 'Открытие', color: '#0077C8' }
+            ];
+            
+            
+            const cardTypes = [
+                { id: 'visa', name: 'Visa', icon: 'fa-cc-visa' },
+                { id: 'mastercard', name: 'MasterCard', icon: 'fa-cc-mastercard' },
+                { id: 'world', name: 'World', icon: 'fa-globe' },
+                { id: 'mir', name: 'МИР', icon: 'fa-credit-card' },
+                { id: 'amex', name: 'American Express', icon: 'fa-cc-amex' }
+            ];
+            
+            const handleInputChange = (e) => {
+                const { name, value, type, checked } = e.target;
+                setNewCard({
+                    ...newCard,
+                    [name]: type === 'checkbox' ? checked : value
+                });
+            };
+            
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                
+                const selectedBank = banks.find(b => b.id === newCard.bank);
+                const cardTypeInfo = cardTypes.find(c => c.id === newCard.cardType);
+                
+                const cardToAdd = {
+                    ...newCard,
+                    id: cards.length + 1,
+                    balance: parseFloat(newCard.balance) || 0,
+                    limit: parseFloat(newCard.limit) || 100000,
+                    spent: 0,
+                    bankName: selectedBank ? selectedBank.name : 'Банк',
+                    cardColor: selectedBank ? selectedBank.color : '#7aa2f7',
+                    cardName: newCard.cardName || `${selectedBank?.name || ''} ${cardTypeInfo?.name || ''}`
+                };
+                
+                setCards([...cards, cardToAdd]);
+                
+               
+                setNewCard({
+                    cardNumber: '',
+                    cardHolder: '',
+                    expiryDate: '',
+                    cvv: '',
+                    cardType: 'visa',
+                    bank: 'tinkoff',
+                    isActive: true,
+                    balance: '',
+                    currency: 'RUB',
+                    cardName: '',
+                    limit: ''
+                });
+                
+                setShowForm(false);
+            };
+            
+            const toggleCardStatus = (id) => {
+                setCards(cards.map(card => 
+                    card.id === id ? { ...card, isActive: !card.isActive } : card
+                ));
+            };
+            
+            const deleteCard = (id) => {
+                if (window.confirm('Вы уверены, что хотите удалить эту карту?')) {
+                    setCards(cards.filter(card => card.id !== id));
+                }
+            };
+            
+          
+            const formatCardNumber = (number) => {
+                return number.replace(/(\d{4})/g, '$1 ').trim();
+            };
+            
+            const formatBalance = (balance) => {
+                return new Intl.NumberFormat('ru-RU').format(balance);
+            };
+            
+            const getCardTypeIcon = (type) => {
+                const cardType = cardTypes.find(c => c.id === type);
+                return cardType ? cardType.icon : 'fa-credit-card';
+            };
+            
+            const getBankLogo = (bankId) => {
+                const bankLogos = {
+                    'tinkoff': '💰',
+                    'sber': '🏦',
+                    'alfa': '🔺',
+                    'vtb': '🔷',
+                    'raiffeisen': '🦁',
+                    'gazprom': '⛽',
+                    'mts': '📱',
+                    'otkritie': '🔓'
+                };
+                return bankLogos[bankId] || '🏛️';
+            };
+            
+            const getBankColor = (bankId) => {
+                const bank = banks.find(b => b.id === bankId);
+                return bank ? bank.color : '#7aa2f7';
+            };
+            
+            
+            const filteredCards = cards.filter(card => {
+                const matchesType = filterType === 'all' || card.cardType === filterType;
+                const matchesBank = filterBank === 'all' || card.bank === filterBank;
+                const matchesSearch = searchQuery === '' || 
+                    card.cardHolder.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                    card.cardName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                    card.bankName.toLowerCase().includes(searchQuery.toLowerCase());
+                
+                return matchesType && matchesBank && matchesSearch;
+            });
+            
+            
+            const totalCards = cards.length;
+            const activeCards = cards.filter(card => card.isActive).length;
+            const totalBalance = cards.reduce((sum, card) => sum + card.balance, 0);
+            const totalLimit = cards.reduce((sum, card) => sum + card.limit, 0);
+            const totalSpent = cards.reduce((sum, card) => sum + card.spent, 0);
+            const utilizationRate = totalLimit > 0 ? (totalSpent / totalLimit * 100).toFixed(1) : 0;
+            
+            
+            const styles = {
+                app: {
+                    minHeight: '100vh',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    background: 'linear-gradient(135deg, #0f0f14 0%, #1a1b26 100%)',
+                    position: 'relative',
+                    overflow: 'hidden'
+                },
+                backgroundPattern: {
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    backgroundImage: 'radial-gradient(circle at 20% 30%, rgba(122, 162, 247, 0.05) 0%, transparent 20%), radial-gradient(circle at 80% 70%, rgba(158, 206, 106, 0.05) 0%, transparent 20%)',
+                    zIndex: 0
+                },
+                header: {
+                    background: 'rgba(26, 27, 38, 0.9)',
+                    backdropFilter: 'blur(10px)',
+                    borderBottom: '1px solid rgba(122, 162, 247, 0.1)',
+                    padding: '1.5rem 2rem',
+                    position: 'sticky',
+                    top: 0,
+                    zIndex: 100
+                },
+                headerContent: {
+                    maxWidth: '1400px',
+                    margin: '0 auto',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center'
+                },
+                headerTitle: {
+                    fontSize: '1.8rem',
+                    fontWeight: '700',
+                    background: 'linear-gradient(90deg, #7aa2f7, #bb9af7)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.75rem'
+                },
+                headerSubtitle: {
+                    fontSize: '0.9rem',
+                    color: 'var(--text-lighter)',
+                    marginTop: '0.25rem'
+                },
+                userInfo: {
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '1rem'
+                },
+                userAvatar: {
+                    width: '42px',
+                    height: '42px',
+                    borderRadius: '50%',
+                    background: 'linear-gradient(135deg, #7aa2f7, #bb9af7)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontWeight: '600',
+                    fontSize: '1.1rem'
+                },
+                mainContainer: {
+                    maxWidth: '1400px',
+                    margin: '2rem auto',
+                    padding: '0 2rem',
+                    flex: '1',
+                    position: 'relative',
+                    zIndex: 1,
+                    width: '100%'
+                },
+                controls: {
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    marginBottom: '2rem',
+                    flexWrap: 'wrap',
+                    gap: '1rem'
+                },
+                searchBar: {
+                    position: 'relative',
+                    flex: '1',
+                    maxWidth: '400px'
+                },
+                searchInput: {
+                    width: '100%',
+                    padding: '0.75rem 1rem 0.75rem 3rem',
+                    borderRadius: 'var(--border-radius-sm)',
+                    border: '1px solid rgba(122, 162, 247, 0.2)',
+                    background: 'rgba(26, 27, 38, 0.7)',
+                    color: 'var(--text)',
+                    fontSize: '0.95rem',
+                    transition: 'all 0.3s'
+                },
+                searchIcon: {
+                    position: 'absolute',
+                    left: '1rem',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    color: 'var(--text-lighter)'
+                },
+                filterSection: {
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '1rem',
+                    flexWrap: 'wrap'
+                },
+                filterGroup: {
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem'
+                },
+                filterLabel: {
+                    fontSize: '0.85rem',
+                    fontWeight: '600',
+                    color: 'var(--text-light)'
+                },
+                filterSelect: {
+                    padding: '0.5rem 1rem',
+                    borderRadius: 'var(--border-radius-sm)',
+                    border: '1px solid rgba(122, 162, 247, 0.2)',
+                    background: 'rgba(26, 27, 38, 0.7)',
+                    color: 'var(--text)',
+                    fontSize: '0.9rem',
+                    minWidth: '140px',
+                    cursor: 'pointer',
+                    transition: 'all 0.3s'
+                },
+                viewControls: {
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem'
+                },
+                viewButton: (active) => ({
+                    padding: '0.5rem 0.75rem',
+                    borderRadius: 'var(--border-radius-sm)',
+                    border: '1px solid rgba(122, 162, 247, 0.2)',
+                    background: active ? 'rgba(122, 162, 247, 0.15)' : 'rgba(26, 27, 38, 0.7)',
+                    color: active ? 'var(--accent)' : 'var(--text-light)',
+                    cursor: 'pointer',
+                    transition: 'all 0.3s',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.25rem'
+                }),
+                addCardBtn: {
+                    background: 'linear-gradient(135deg, #7aa2f7, #5a7cd3)',
+                    color: 'white',
+                    border: 'none',
+                    padding: '0.75rem 1.5rem',
+                    borderRadius: 'var(--border-radius-sm)',
+                    fontSize: '0.95rem',
+                    fontWeight: '600',
+                    cursor: 'pointer',
+                    transition: 'all 0.3s',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    boxShadow: 'var(--shadow-light)'
+                },
+                cardsGrid: {
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(3, 1fr)',
+                    gap: '1.5rem',
+                    marginBottom: '3rem'
+                },
+                cardItem: (card) => ({
+                    background: `linear-gradient(135deg, ${getBankColor(card.bank)}20, rgba(26, 27, 38, 0.9))`,
+                    borderRadius: 'var(--border-radius-lg)',
+                    padding: '1.5rem',
+                    border: `1px solid ${getBankColor(card.bank)}30`,
+                    boxShadow: 'var(--shadow)',
+                    transition: 'all 0.4s',
+                    position: 'relative',
+                    overflow: 'hidden',
+                    animation: 'fadeIn 0.5s ease-out'
+                }),
+                cardHeader: {
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    marginBottom: '1.5rem'
+                },
+                bankInfo: {
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.75rem'
+                },
+                bankLogo: (bankId) => ({
+                    fontSize: '1.5rem',
+                    background: getBankColor(bankId),
+                    width: '40px',
+                    height: '40px',
+                    borderRadius: '50%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: 'white'
+                }),
+                bankDetails: {
+                    display: 'flex',
+                    flexDirection: 'column'
+                },
+                bankName: {
+                    fontSize: '0.9rem',
+                    fontWeight: '600',
+                    color: 'var(--text-light)'
+                },
+                cardName: {
+                    fontSize: '1.1rem',
+                    fontWeight: '700',
+                    color: 'var(--text)'
+                },
+                cardStatus: (isActive) => ({
+                    padding: '0.25rem 0.75rem',
+                    borderRadius: '20px',
+                    fontSize: '0.75rem',
+                    fontWeight: '600',
+                    background: isActive ? 'rgba(158, 206, 106, 0.2)' : 'rgba(247, 118, 142, 0.2)',
+                    color: isActive ? 'var(--success)' : 'var(--danger)',
+                    border: `1px solid ${isActive ? 'var(--success)' : 'var(--danger)'}30`
+                }),
+                cardNumber: {
+                    fontSize: '1.5rem',
+                    letterSpacing: '1px',
+                    marginBottom: '1.5rem',
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontWeight: '500',
+                    color: 'var(--text)',
+                    background: 'rgba(0, 0, 0, 0.2)',
+                    padding: '0.75rem',
+                    borderRadius: 'var(--border-radius-sm)',
+                    textAlign: 'center'
+                },
+                cardDetails: {
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    marginBottom: '1.5rem',
+                    gap: '1rem'
+                },
+                cardDetailItem: {
+                    flex: '1'
+                },
+                label: {
+                    fontSize: '0.75rem',
+                    color: 'var(--text-lighter)',
+                    marginBottom: '0.25rem',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.5px'
+                },
+                value: {
+                    fontSize: '1rem',
+                    fontWeight: '600',
+                    color: 'var(--text)'
+                },
+                cardTypeBadge: {
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    padding: '0.25rem 0.75rem',
+                    borderRadius: '12px',
+                    background: 'rgba(122, 162, 247, 0.1)',
+                    color: 'var(--accent)',
+                    fontSize: '0.85rem',
+                    marginTop: '0.5rem'
+                },
+                balanceSection: {
+                    background: 'rgba(26, 27, 38, 0.7)',
+                    borderRadius: 'var(--border-radius-sm)',
+                    padding: '1rem',
+                    marginBottom: '1.5rem'
+                },
+                balanceAmount: {
+                    fontSize: '1.8rem',
+                    fontWeight: '700',
+                    color: 'var(--text)',
+                    marginBottom: '0.5rem'
+                },
+                limitProgress: {
+                    marginTop: '0.75rem'
+                },
+                progressBar: {
+                    height: '6px',
+                    background: 'rgba(122, 162, 247, 0.1)',
+                    borderRadius: '3px',
+                    overflow: 'hidden',
+                    marginBottom: '0.5rem'
+                },
+                progressFill: (percentage) => ({
+                    height: '100%',
+                    background: percentage > 80 ? 'var(--danger)' : 
+                               percentage > 50 ? 'var(--warning)' : 'var(--success)',
+                    width: `${Math.min(percentage, 100)}%`,
+                    borderRadius: '3px',
+                    transition: 'width 0.5s ease'
+                }),
+                progressText: {
+                    fontSize: '0.75rem',
+                    color: 'var(--text-lighter)',
+                    display: 'flex',
+                    justifyContent: 'space-between'
+                },
+                cardActions: {
+                    display: 'flex',
+                    gap: '0.75rem'
+                },
+                cardButton: (type) => ({
+                    flex: '1',
+                    padding: '0.75rem',
+                    borderRadius: 'var(--border-radius-sm)',
+                    border: 'none',
+                    fontWeight: '600',
+                    cursor: 'pointer',
+                    transition: 'all 0.3s',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '0.5rem',
+                    fontSize: '0.9rem',
+                    background: type === 'toggle' ? 'rgba(122, 162, 247, 0.1)' : 
+                               type === 'delete' ? 'rgba(247, 118, 142, 0.1)' : 'rgba(158, 206, 106, 0.1)',
+                    color: type === 'toggle' ? 'var(--accent)' : 
+                           type === 'delete' ? 'var(--danger)' : 'var(--success)',
+                    border: `1px solid ${type === 'toggle' ? 'var(--accent)' : 
+                            type === 'delete' ? 'var(--danger)' : 'var(--success)'}30`
+                }),
+                statsGrid: {
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(4, 1fr)',
+                    gap: '1.5rem',
+                    marginBottom: '2rem'
+                },
+                statCard: {
+                    background: 'var(--card-gradient)',
+                    borderRadius: 'var(--border-radius)',
+                    padding: '1.5rem',
+                    border: '1px solid rgba(122, 162, 247, 0.1)',
+                    boxShadow: 'var(--shadow-light)',
+                    transition: 'all 0.3s'
+                },
+                statTitle: {
+                    fontSize: '0.9rem',
+                    color: 'var(--text-lighter)',
+                    marginBottom: '0.5rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem'
+                },
+                statValue: {
+                    fontSize: '2rem',
+                    fontWeight: '700',
+                    color: 'var(--text)',
+                    marginBottom: '0.25rem'
+                },
+                statSubtitle: {
+                    fontSize: '0.8rem',
+                    color: 'var(--text-light)'
+                },
+                footer: {
+                    background: 'rgba(26, 27, 38, 0.9)',
+                    borderTop: '1px solid rgba(122, 162, 247, 0.1)',
+                    padding: '1.5rem 2rem',
+                    marginTop: 'auto'
+                },
+                footerContent: {
+                    maxWidth: '1400px',
+                    margin: '0 auto',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    flexWrap: 'wrap',
+                    gap: '1rem'
+                },
+                footerText: {
+                    fontSize: '0.85rem',
+                    color: 'var(--text-lighter)'
+                },
+                footerLinks: {
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '1.5rem'
+                },
+                footerLink: {
+                    fontSize: '0.85rem',
+                    color: 'var(--text-light)',
+                    textDecoration: 'none',
+                    transition: 'color 0.3s',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem'
+                }
+            };
+            
+
+            useEffect(() => {
+                const styleSheet = document.createElement("style");
+                styleSheet.innerHTML = `
+                    .card-item:hover {
+                        transform: translateY(-8px);
+                        border-color: var(--accent);
+                        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+                    }
+                    
+                    .stat-card:hover {
+                        transform: translateY(-4px);
+                        border-color: var(--accent);
+                    }
+                    
+                    button:hover {
+                        transform: translateY(-2px);
+                        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+                    }
+                    
+                    select:hover, input:hover {
+                        border-color: var(--accent) !important;
+                    }
+                    
+                    select:focus, input:focus {
+                        outline: none;
+                        border-color: var(--accent) !important;
+                        box-shadow: 0 0 0 3px rgba(122, 162, 247, 0.2) !important;
+                    }
+                    
+                    .footer-link:hover {
+                        color: var(--accent) !important;
+                    }
+                `;
+                document.head.appendChild(styleSheet);
+                
+                return () => {
+                    document.head.removeChild(styleSheet);
+                };
+            }, []);
+            
+            return (
+                <div style={styles.app}>
+                    <div style={styles.backgroundPattern}></div>
+                    
+                    <header style={styles.header}>
+                        <div style={styles.headerContent}>
+                            <div>
+                                <h1 style={styles.headerTitle}>
+                                    <i className="fas fa-credit-card"></i>
+                                    Elite Card Manager
+                                </h1>
+                                <div style={styles.headerSubtitle}>
+                                    Управление премиальными банковскими картами
+                                </div>
+                            </div>
+                            <div style={styles.userInfo}>
+                                <div style={styles.userAvatar}>AV</div>
+                                <div>
+                                    <div style={{fontWeight: '600', fontSize: '0.95rem'}}>Имя Фамилия</div>
+                                    <div style={{fontSize: '0.8rem', color: 'var(--text-lighter)'}}>Premium клиент</div>
+                                </div>
+                            </div>
+                        </div>
+                    </header>
+                    
+                    <main style={styles.mainContainer}>
+                        <div style={styles.controls}>
+                            <div style={styles.searchBar}>
+                                <i className="fas fa-search" style={styles.searchIcon}></i>
+                                <input 
+                                    type="text" 
+                                    placeholder="Поиск по картам, банкам или владельцам..."
+                                    style={styles.searchInput}
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                />
+                            </div>
+                            
+                            <div style={styles.filterSection}>
+                                <div style={styles.filterGroup}>
+                                    <div style={styles.filterLabel}>Тип:</div>
+                                    <select 
+                                        style={styles.filterSelect}
+                                        value={filterType} 
+                                        onChange={(e) => setFilterType(e.target.value)}
+                                    >
+                                        <option value="all">Все типы</option>
+                                        {cardTypes.map(type => (
+                                            <option key={type.id} value={type.id}>
+                                                <i className={`fab ${type.icon}`}></i> {type.name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                                
+                                <div style={styles.filterGroup}>
+                                    <div style={styles.filterLabel}>Банк:</div>
+                                    <select 
+                                        style={styles.filterSelect}
+                                        value={filterBank} 
+                                        onChange={(e) => setFilterBank(e.target.value)}
+                                    >
+                                        <option value="all">Все банки</option>
+                                        {banks.map(bank => (
+                                            <option key={bank.id} value={bank.id}>
+                                                {bank.name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                                
+                                <div style={styles.viewControls}>
+                                    <button 
+                                        style={styles.viewButton(viewMode === 'grid')}
+                                        onClick={() => setViewMode('grid')}
+                                    >
+                                        <i className="fas fa-th-large"></i> Сетка
+                                    </button>
+                                    <button 
+                                        style={styles.viewButton(viewMode === 'list')}
+                                        onClick={() => setViewMode('list')}
+                                    >
+                                        <i className="fas fa-list"></i> Список
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <button 
+                                style={styles.addCardBtn}
+                                onClick={() => setShowForm(!showForm)}
+                            >
+                                <i className="fas fa-plus-circle"></i>
+                                {showForm ? 'Отмена' : 'Добавить карту'}
+                            </button>
+                        </div>
+                        
+                        {showForm && (
+                            <div style={{
+                                background: 'var(--card-gradient)',
+                                borderRadius: 'var(--border-radius-lg)',
+                                padding: '2rem',
+                                marginBottom: '2rem',
+                                border: '1px solid rgba(122, 162, 247, 0.2)',
+                                boxShadow: 'var(--shadow)',
+                                animation: 'fadeIn 0.3s ease-out'
+                            }}>
+                                <h2 style={{marginBottom: '1.5rem', color: 'var(--text)', fontSize: '1.5rem'}}>
+                                    <i className="fas fa-credit-card" style={{marginRight: '0.75rem'}}></i>
+                                    Добавление новой карты
+                                </h2>
+                                <form onSubmit={handleSubmit}>
+                                    <div style={{display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1.5rem', marginBottom: '1.5rem'}}>
+                                        <div>
+                                            <label style={styles.label}>Номер карты *</label>
+                                            <input 
+                                                style={styles.searchInput}
+                                                type="text" 
+                                                name="cardNumber"
+                                                value={newCard.cardNumber}
+                                                onChange={handleInputChange}
+                                                placeholder="XXXX XXXX XXXX XXXX"
+                                                required
+                                                maxLength="19"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label style={styles.label}>Держатель карты *</label>
+                                            <input 
+                                                style={styles.searchInput}
+                                                type="text" 
+                                                name="cardHolder"
+                                                value={newCard.cardHolder}
+                                                onChange={handleInputChange}
+                                                placeholder="ИМЯ ФАМИЛИЯ"
+                                                required
+                                            />
+                                        </div>
+                                        <div>
+                                            <label style={styles.label}>Срок действия *</label>
+                                            <input 
+                                                style={styles.searchInput}
+                                                type="text" 
+                                                name="expiryDate"
+                                                value={newCard.expiryDate}
+                                                onChange={handleInputChange}
+                                                placeholder="ММ/ГГ"
+                                                required
+                                                maxLength="5"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label style={styles.label}>CVV код *</label>
+                                            <input 
+                                                style={styles.searchInput}
+                                                type="text" 
+                                                name="cvv"
+                                                value={newCard.cvv}
+                                                onChange={handleInputChange}
+                                                placeholder="123"
+                                                required
+                                                maxLength="3"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label style={styles.label}>Банк *</label>
+                                            <select 
+                                                style={styles.filterSelect}
+                                                name="bank"
+                                                value={newCard.bank}
+                                                onChange={handleInputChange}
+                                            >
+                                                {banks.map(bank => (
+                                                    <option key={bank.id} value={bank.id}>
+                                                        {bank.name}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label style={styles.label}>Тип карты *</label>
+                                            <select 
+                                                style={styles.filterSelect}
+                                                name="cardType"
+                                                value={newCard.cardType}
+                                                onChange={handleInputChange}
+                                            >
+                                                {cardTypes.map(type => (
+                                                    <option key={type.id} value={type.id}>
+                                                        <i className={`fab ${type.icon}`}></i> {type.name}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label style={styles.label}>Баланс *</label>
+                                            <input 
+                                                style={styles.searchInput}
+                                                type="number" 
+                                                name="balance"
+                                                value={newCard.balance}
+                                                onChange={handleInputChange}
+                                                placeholder="0"
+                                                required
+                                                min="0"
+                                                step="0.01"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label style={styles.label}>Лимит</label>
+                                            <input 
+                                                style={styles.searchInput}
+                                                type="number" 
+                                                name="limit"
+                                                value={newCard.limit}
+                                                onChange={handleInputChange}
+                                                placeholder="100000"
+                                                min="0"
+                                            />
+                                        </div>
+                                    </div>
+                                    
+                                    <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+                                        <label style={{...styles.checkboxLabel, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem'}}>
+                                            <input 
+                                                type="checkbox" 
+                                                name="isActive"
+                                                checked={newCard.isActive}
+                                                onChange={handleInputChange}
+                                                style={{width: '18px', height: '18px'}}
+                                            />
+                                            Карта активна
+                                        </label>
+                                        
+                                        <button 
+                                            type="submit" 
+                                            style={styles.addCardBtn}
+                                        >
+                                            <i className="fas fa-check-circle"></i> Добавить карту
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        )}
+                        
+                        <div style={styles.cardsGrid}>
+                            {filteredCards.map(card => {
+                                const spentPercentage = (card.spent / card.limit) * 100;
+                                
+                                return (
+                                    <div 
+                                        key={card.id} 
+                                        style={styles.cardItem(card)}
+                                        className="card-item"
+                                    >
+                                        <div style={styles.cardHeader}>
+                                            <div style={styles.bankInfo}>
+                                                <div style={styles.bankLogo(card.bank)}>
+                                                    {getBankLogo(card.bank)}
+                                                </div>
+                                                <div style={styles.bankDetails}>
+                                                    <div style={styles.bankName}>{card.bankName}</div>
+                                                    <div style={styles.cardName}>{card.cardName}</div>
+                                                </div>
+                                            </div>
+                                            <div style={styles.cardStatus(card.isActive)}>
+                                                {card.isActive ? 'АКТИВНА' : 'ЗАБЛОКИРОВАНА'}
+                                            </div>
+                                        </div>
+                                        
+                                        <div style={styles.cardNumber}>
+                                            {formatCardNumber(card.cardNumber)}
+                                        </div>
+                                        
+                                        <div style={styles.cardDetails}>
+                                            <div style={styles.cardDetailItem}>
+                                                <div style={styles.label}>Владелец</div>
+                                                <div style={styles.value}>{card.cardHolder}</div>
+                                            </div>
+                                            <div style={styles.cardDetailItem}>
+                                                <div style={styles.label}>Срок действия</div>
+                                                <div style={styles.value}>{card.expiryDate}</div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div style={styles.cardTypeBadge}>
+                                            <i className={`fab ${getCardTypeIcon(card.cardType)}`}></i>
+                                            {cardTypes.find(t => t.id === card.cardType)?.name || card.cardType}
+                                        </div>
+                                        
+                                        <div style={styles.balanceSection}>
+                                            <div style={styles.label}>Текущий баланс</div>
+                                            <div style={styles.balanceAmount}>
+                                                {formatBalance(card.balance)} {card.currency}
+                                            </div>
+                                            
+                                            <div style={styles.limitProgress}>
+                                                <div style={styles.label}>
+                                                    Использовано: {formatBalance(card.spent)} / {formatBalance(card.limit)} {card.currency}
+                                                </div>
+                                                <div style={styles.progressBar}>
+                                                    <div style={styles.progressFill(spentPercentage)}></div>
+                                                </div>
+                                                <div style={styles.progressText}>
+                                                    <span>0%</span>
+                                                    <span>{spentPercentage.toFixed(1)}%</span>
+                                                    <span>100%</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div style={styles.cardActions}>
+                                            <button 
+                                                style={styles.cardButton('toggle')}
+                                                onClick={() => toggleCardStatus(card.id)}
+                                            >
+                                                <i className={`fas ${card.isActive ? 'fa-lock' : 'fa-unlock'}`}></i>
+                                                {card.isActive ? 'Заблокировать' : 'Активировать'}
+                                            </button>
+                                            <button 
+                                                style={styles.cardButton('delete')}
+                                                onClick={() => deleteCard(card.id)}
+                                            >
+                                                <i className="fas fa-trash-alt"></i> Удалить
+                                            </button>
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                        
+                        {filteredCards.length === 0 && (
+                            <div style={{
+                                textAlign: 'center',
+                                padding: '4rem 2rem',
+                                background: 'var(--card-gradient)',
+                                borderRadius: 'var(--border-radius-lg)',
+                                border: '1px solid rgba(122, 162, 247, 0.2)',
+                                marginBottom: '2rem'
+                            }}>
+                                <i className="fas fa-search" style={{fontSize: '3rem', color: 'var(--text-lighter)', marginBottom: '1rem'}}></i>
+                                <h3 style={{color: 'var(--text)', marginBottom: '0.5rem'}}>Карты не найдены</h3>
+                                <p style={{color: 'var(--text-lighter)'}}>
+                                    {searchQuery ? 'Попробуйте изменить параметры поиска' : 'Добавьте первую карту, нажав на кнопку "Добавить карту"'}
+                                </p>
+                            </div>
+                        )}
+                        
+                        <div style={styles.statsGrid}>
+                            <div style={styles.statCard} className="stat-card">
+                                <div style={styles.statTitle}>
+                                    <i className="fas fa-credit-card" style={{color: 'var(--accent)'}}></i>
+                                    Всего карт
+                                </div>
+                                <div style={styles.statValue}>{totalCards}</div>
+                                <div style={styles.statSubtitle}>{activeCards} активных</div>
+                            </div>
+                            <div style={styles.statCard} className="stat-card">
+                                <div style={styles.statTitle}>
+                                    <i className="fas fa-wallet" style={{color: 'var(--success)'}}></i>
+                                    Общий баланс
+                                </div>
+                                <div style={styles.statValue}>{formatBalance(totalBalance)} ₽</div>
+                                <div style={styles.statSubtitle}>Во всех валютах</div>
+                            </div>
+                            <div style={styles.statCard} className="stat-card">
+                                <div style={styles.statTitle}>
+                                    <i className="fas fa-chart-line" style={{color: 'var(--warning)'}}></i>
+                                    Кредитный лимит
+                                </div>
+                                <div style={styles.statValue}>{formatBalance(totalLimit)} ₽</div>
+                                <div style={styles.statSubtitle}>Общий доступный лимит</div>
+                            </div>
+                            <div style={styles.statCard} className="stat-card">
+                                <div style={styles.statTitle}>
+                                    <i className="fas fa-percentage" style={{color: 'var(--danger)'}}></i>
+                                    Использование
+                                </div>
+                                <div style={styles.statValue}>{utilizationRate}%</div>
+                                <div style={styles.statSubtitle}>От общего лимита</div>
+                            </div>
+                        </div>
+                    </main>
+                    
+                    <footer style={styles.footer}>
+                        <div style={styles.footerContent}>
+                            <div style={styles.footerText}>
+                                <i className="fas fa-shield-alt" style={{marginRight: '0.5rem'}}></i>
+                                Elite Card Manager v2.0 • Безопасное управление финансами
+                            </div>
+                            <div style={styles.footerLinks}>
+                                <a href="#" style={styles.footerLink} className="footer-link">
+                                    <i className="fas fa-question-circle"></i> Помощь
+                                </a>
+                                <a href="#" style={styles.footerLink} className="footer-link">
+                                    <i className="fas fa-cog"></i> Настройки
+                                </a>
+                                <a href="#" style={styles.footerLink} className="footer-link">
+                                    <i className="fas fa-lock"></i> Безопасность
+                                </a>
+                            </div>
+                        </div>
+                    </footer>
+                </div>
+            );
+        }
+        
+       
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>
