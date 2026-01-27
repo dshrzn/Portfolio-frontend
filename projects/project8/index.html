@@ -49,7 +49,7 @@
             flex-direction: column;
         }
         
-        /* Анимации */
+      
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
@@ -69,9 +69,7 @@
             border-radius: 3px;
         }
         
-        /* АДАПТИВНОСТЬ ДЛЯ ТЕЛЕФОНОВ */
-        
-        /* Большие планшеты и маленькие ноутбуки */
+  
         @media (max-width: 1200px) {
             .cards-grid {
                 grid-template-columns: repeat(2, 1fr) !important;
@@ -82,7 +80,7 @@
             }
         }
         
-        /* Планшеты (вертикальная ориентация) */
+        
         @media (max-width: 992px) {
             .main-container {
                 padding: 0 1.5rem !important;
@@ -107,7 +105,7 @@
             }
         }
         
-        /* Планшеты (горизонтальная ориентация) и большие телефоны */
+        
         @media (max-width: 768px) {
             .cards-grid {
                 grid-template-columns: 1fr !important;
@@ -189,7 +187,7 @@
             }
             
             .user-info {
-                display: none !important; /* Скрываем на мобильных чтобы не занимать место */
+                display: none !important;
             }
             
             .filter-group {
@@ -284,7 +282,7 @@
             }
             
             .view-controls {
-                display: none !important; /* Скрываем переключатель вида на телефоне */
+                display: none !important; 
             }
             
             .filter-section {
@@ -297,7 +295,7 @@
             }
         }
         
-        /* Очень маленькие телефоны */
+ 
         @media (max-width: 375px) {
             .header-content h1 {
                 font-size: 1.3rem !important;
@@ -327,11 +325,11 @@
             }
             
             input, select, button {
-                font-size: 16px !important; /* Предотвращает зум в iOS */
+                font-size: 16px !important;
             }
         }
         
-        /* Ландшафтная ориентация телефонов */
+  
         @media (max-height: 600px) and (orientation: landscape) {
             .header {
                 padding: 0.8rem 1rem !important;
@@ -360,7 +358,7 @@
             }
         }
         
-        /* Для устройств с маленькой высотой */
+     
         @media (max-height: 500px) {
             .header {
                 position: static !important;
@@ -371,19 +369,18 @@
             }
         }
         
-        /* Улучшения для касаний на мобильных */
         @media (hover: none) and (pointer: coarse) {
             button, .card-button, .filter-select, .view-button {
-                min-height: 44px !important; /* Минимальный размер для касания */
+                min-height: 44px !important;
                 min-width: 44px !important;
             }
             
             input, select {
-                font-size: 16px !important; /* Предотвращает автозум в iOS */
+                font-size: 16px !important; 
             }
             
             .card-item:hover {
-                transform: none !important; /* Отключаем hover эффекты на таче */
+                transform: none !important;
             }
             
             button:active, .card-button:active {
@@ -392,12 +389,11 @@
             }
         }
         
-        /* Для темной темы на мобильных */
+        
         @media (prefers-color-scheme: dark) {
-            /* Уже используется темная тема */
         }
         
-        /* Для устройств с вырезом (iPhone X и новее) */
+     
         @supports (padding: max(0px)) {
             .header, .footer, .main-container {
                 padding-left: max(1rem, env(safe-area-inset-left)) !important;
@@ -417,12 +413,12 @@
 <body>
     <div id="root"></div>
 
-    <!-- React и Babel -->
+
     <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-    <!-- Весь React код -->
+
     <script type="text/babel">
         const { useState, useEffect } = React;
         
@@ -1113,7 +1109,7 @@
                             <div style={styles.userInfo}>
                                 <div style={styles.userAvatar}>AV</div>
                                 <div>
-                                    <div style={{fontWeight: '600', fontSize: '0.9rem'}}>Алексей Волков</div>
+                                    <div style={{fontWeight: '600', fontSize: '0.9rem'}}>Имя Фамилия</div>
                                     <div style={{fontSize: '0.75rem', color: 'var(--text-lighter)'}}>Premium клиент</div>
                                 </div>
                             </div>
@@ -1479,3 +1475,4 @@
     </script>
 </body>
 </html>
+
